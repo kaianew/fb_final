@@ -1,0 +1,139 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=65)])),
+        Assign(
+            targets=[
+                Name(id='value', ctx=Store())],
+            value=Call(
+                func=Name(id='float', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter a value: ')])])),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=35)])),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='f',
+                    ctx=Load()),
+                args=[
+                    Constant(value=2),
+                    Constant(value=3),
+                    Constant(value=35)])),
+        If(
+            test=Compare(
+                left=Name(id='value', ctx=Load()),
+                ops=[
+                    Gt()],
+                comparators=[
+                    Constant(value=0)]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='y_transformed', ctx=Store())],
+                    value=Subscript(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='stats', ctx=Load()),
+                                attr='boxcox',
+                                ctx=Load()),
+                            args=[
+                                Name(id='y', ctx=Load())]),
+                        slice=Constant(value=0),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='ttest_1samp',
+                            ctx=Load()),
+                        args=[
+                            Name(id='y_transformed', ctx=Load()),
+                            Constant(value=0)]))],
+            orelse=[
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Name(id='_', ctx=Store()),
+                                Name(id='p', ctx=Store())],
+                            ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='normaltest',
+                            ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load())])),
+                If(
+                    test=Compare(
+                        left=Name(id='p', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Constant(value=0.05)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='pearsonr',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load()),
+                                    Name(id='y', ctx=Load())]))])]),
+        Assign(
+            targets=[
+                Name(id='result2', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='f_oneway',
+                    ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load()),
+                    Name(id='y', ctx=Load())]))])

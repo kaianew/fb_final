@@ -1,0 +1,149 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=49)])),
+        Assign(
+            targets=[
+                Name(id='n_points', ctx=Store())],
+            value=Call(
+                func=Name(id='int', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter number of points: ')])])),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Name(id='n_points', ctx=Load())])),
+        Assign(
+            targets=[
+                Name(id='noise', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=0.5),
+                    Name(id='n_points', ctx=Load())])),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=BinOp(
+                left=BinOp(
+                    left=Constant(value=2),
+                    op=Mult(),
+                    right=Name(id='x', ctx=Load())),
+                op=Add(),
+                right=Name(id='noise', ctx=Load()))),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='pearson_r', ctx=Store()),
+                        Name(id='pearson_p', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='pearsonr',
+                    ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load()),
+                    Name(id='y', ctx=Load())])),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='spearman_r', ctx=Store()),
+                        Name(id='spearman_p', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='spearmanr',
+                    ctx=Load()),
+                args=[
+                    Name(id='x', ctx=Load()),
+                    Name(id='y', ctx=Load())])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='Pearson correlation:')])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    JoinedStr(
+                        values=[
+                            Constant(value='r = '),
+                            FormattedValue(
+                                value=Name(id='pearson_r', ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')])),
+                            Constant(value=', p-value = '),
+                            FormattedValue(
+                                value=Name(id='pearson_p', ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')]))])])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    Constant(value='\nSpearman correlation:')])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    JoinedStr(
+                        values=[
+                            Constant(value='rho = '),
+                            FormattedValue(
+                                value=Name(id='spearman_r', ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')])),
+                            Constant(value=', p-value = '),
+                            FormattedValue(
+                                value=Name(id='spearman_p', ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')]))])]))])

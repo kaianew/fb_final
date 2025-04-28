@@ -1,0 +1,158 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=78)])),
+        Assign(
+            targets=[
+                Name(id='method', ctx=Store())],
+            value=Call(
+                func=Name(id='input', ctx=Load()),
+                args=[
+                    Constant(value='Enter method (1/2/3): ')])),
+        Assign(
+            targets=[
+                Name(id='x', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=40)])),
+        Assign(
+            targets=[
+                Name(id='y', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='beta',
+                    ctx=Load()),
+                args=[
+                    Constant(value=2),
+                    Constant(value=5),
+                    Constant(value=40)])),
+        If(
+            test=Compare(
+                left=Name(id='method', ctx=Load()),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value='1')]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='y_box', ctx=Store())],
+                    value=Subscript(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='stats', ctx=Load()),
+                                attr='boxcox',
+                                ctx=Load()),
+                            args=[
+                                Name(id='y', ctx=Load())]),
+                        slice=Constant(value=0),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='ttest_ind',
+                            ctx=Load()),
+                        args=[
+                            Name(id='x', ctx=Load()),
+                            Name(id='y_box', ctx=Load())]))],
+            orelse=[
+                If(
+                    test=Compare(
+                        left=Name(id='method', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='2')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='y_yeo', ctx=Store())],
+                            value=Subscript(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Name(id='stats', ctx=Load()),
+                                        attr='yeojohnson',
+                                        ctx=Load()),
+                                    args=[
+                                        Name(id='y', ctx=Load())]),
+                                slice=Constant(value=0),
+                                ctx=Load())),
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='_', ctx=Store()),
+                                        Name(id='p', ctx=Store())],
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='shapiro',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load())])),
+                        If(
+                            test=Compare(
+                                left=Name(id='p', ctx=Load()),
+                                ops=[
+                                    Gt()],
+                                comparators=[
+                                    Constant(value=0.05)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='result', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='pearsonr',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='x', ctx=Load()),
+                                            Name(id='y', ctx=Load())]))])],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='f_oneway',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='x', ctx=Load()),
+                                    Name(id='y', ctx=Load())]))])])])

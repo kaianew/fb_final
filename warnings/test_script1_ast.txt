@@ -1,0 +1,163 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='plot_data')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=42)])),
+        Assign(
+            targets=[
+                Name(id='number', ctx=Store())],
+            value=Call(
+                func=Name(id='int', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter a number: ')])])),
+        Assign(
+            targets=[
+                Name(id='normal_data', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                keywords=[
+                    keyword(
+                        arg='loc',
+                        value=Constant(value=10)),
+                    keyword(
+                        arg='scale',
+                        value=Constant(value=2)),
+                    keyword(
+                        arg='size',
+                        value=Constant(value=30))])),
+        Assign(
+            targets=[
+                Name(id='skewed_data', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='lognormal',
+                    ctx=Load()),
+                keywords=[
+                    keyword(
+                        arg='mean',
+                        value=Constant(value=2)),
+                    keyword(
+                        arg='sigma',
+                        value=Constant(value=1.5)),
+                    keyword(
+                        arg='size',
+                        value=Constant(value=30))])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plot_data', ctx=Load()),
+                    attr='plot',
+                    ctx=Load()),
+                args=[
+                    Name(id='normal_data', ctx=Load()),
+                    Name(id='skewed_data', ctx=Load()),
+                    Constant(value='original_histogram.pdf')])),
+        If(
+            test=Compare(
+                left=Name(id='number', ctx=Load()),
+                ops=[
+                    Lt()],
+                comparators=[
+                    Constant(value=2)]),
+            body=[
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Name(id='t_stat', ctx=Store()),
+                                Name(id='p_value', ctx=Store())],
+                            ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='ttest_ind',
+                            ctx=Load()),
+                        args=[
+                            Name(id='normal_data', ctx=Load()),
+                            Name(id='skewed_data', ctx=Load())]))]),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='_', ctx=Store()),
+                        Name(id='_', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='shapiro',
+                    ctx=Load()),
+                args=[
+                    Name(id='normal_data', ctx=Load())])),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='skewed_data', ctx=Store()),
+                        Name(id='_', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='boxcox',
+                    ctx=Load()),
+                args=[
+                    Name(id='skewed_data', ctx=Load())])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plot_data', ctx=Load()),
+                    attr='plot',
+                    ctx=Load()),
+                args=[
+                    Name(id='normal_data', ctx=Load()),
+                    Name(id='skewed_data', ctx=Load()),
+                    Constant(value='normalized_histogram.pdf')])),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='t_stat', ctx=Store()),
+                        Name(id='p_value', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='ttest_ind',
+                    ctx=Load()),
+                args=[
+                    Name(id='normal_data', ctx=Load()),
+                    Name(id='skewed_data', ctx=Load())]))])

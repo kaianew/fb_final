@@ -1,0 +1,260 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=43)])),
+        Assign(
+            targets=[
+                Name(id='n', ctx=Store())],
+            value=Call(
+                func=Name(id='int', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter number of iterations: ')])])),
+        Assign(
+            targets=[
+                Name(id='data_list', ctx=Store())],
+            value=List(
+                elts=[
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='normal',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=1),
+                            Constant(value=50)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='chisquare',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3),
+                            Constant(value=50)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='exponential',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=50)])],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='results', ctx=Store())],
+            value=List(ctx=Load())),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Name(id='n', ctx=Load())]),
+            body=[
+                If(
+                    test=Compare(
+                        left=BinOp(
+                            left=Name(id='i', ctx=Load()),
+                            op=Mod(),
+                            right=Constant(value=3)),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value=0)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='stat', ctx=Store()),
+                                        Name(id='_', ctx=Store())],
+                                    ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='ttest_1samp',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data_list', ctx=Load()),
+                                        slice=BinOp(
+                                            left=Name(id='i', ctx=Load()),
+                                            op=Mod(),
+                                            right=Constant(value=3)),
+                                        ctx=Load()),
+                                    Constant(value=0)])),
+                        Expr(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='results', ctx=Load()),
+                                    attr='append',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='stat', ctx=Load())]))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=BinOp(
+                                    left=Name(id='i', ctx=Load()),
+                                    op=Mod(),
+                                    right=Constant(value=3)),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=1)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Tuple(
+                                            elts=[
+                                                Name(id='norm_data', ctx=Store()),
+                                                Name(id='_', ctx=Store())],
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='boxcox',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data_list', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Mod(),
+                                                    right=Constant(value=3)),
+                                                ctx=Load())])),
+                                Assign(
+                                    targets=[
+                                        Tuple(
+                                            elts=[
+                                                Name(id='stat', ctx=Store()),
+                                                Name(id='_', ctx=Store())],
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='ttest_rel',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data_list', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Mod(),
+                                                    right=Constant(value=3)),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='data_list', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=BinOp(
+                                                        left=Name(id='i', ctx=Load()),
+                                                        op=Add(),
+                                                        right=Constant(value=1)),
+                                                    op=Mod(),
+                                                    right=Constant(value=3)),
+                                                ctx=Load())])),
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='results', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='stat', ctx=Load())]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Tuple(
+                                            elts=[
+                                                Name(id='_', ctx=Store()),
+                                                Name(id='p', ctx=Store())],
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='shapiro',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data_list', ctx=Load()),
+                                                slice=BinOp(
+                                                    left=Name(id='i', ctx=Load()),
+                                                    op=Mod(),
+                                                    right=Constant(value=3)),
+                                                ctx=Load())])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='p', ctx=Load()),
+                                        ops=[
+                                            Gt()],
+                                        comparators=[
+                                            Constant(value=0.05)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Tuple(
+                                                    elts=[
+                                                        Name(id='stat', ctx=Store()),
+                                                        Name(id='_', ctx=Store())],
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='stats', ctx=Load()),
+                                                    attr='pearsonr',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='data_list', ctx=Load()),
+                                                        slice=BinOp(
+                                                            left=Name(id='i', ctx=Load()),
+                                                            op=Mod(),
+                                                            right=Constant(value=3)),
+                                                        ctx=Load()),
+                                                    Subscript(
+                                                        value=Name(id='data_list', ctx=Load()),
+                                                        slice=BinOp(
+                                                            left=BinOp(
+                                                                left=Name(id='i', ctx=Load()),
+                                                                op=Add(),
+                                                                right=Constant(value=1)),
+                                                            op=Mod(),
+                                                            right=Constant(value=3)),
+                                                        ctx=Load())])),
+                                        Expr(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='results', ctx=Load()),
+                                                    attr='append',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='stat', ctx=Load())]))])])])])])

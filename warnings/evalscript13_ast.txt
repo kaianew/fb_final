@@ -1,0 +1,318 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=51)])),
+        Assign(
+            targets=[
+                Name(id='n_rows', ctx=Store())],
+            value=Call(
+                func=Name(id='int', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter number of rows: ')])])),
+        Assign(
+            targets=[
+                Name(id='alpha', ctx=Store())],
+            value=Call(
+                func=Name(id='float', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter significance level: ')])])),
+        Assign(
+            targets=[
+                Name(id='df', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='pd', ctx=Load()),
+                    attr='DataFrame',
+                    ctx=Load()),
+                args=[
+                    Dict(
+                        keys=[
+                            Constant(value='normal'),
+                            Constant(value='gamma'),
+                            Constant(value='exp'),
+                            Constant(value='group')],
+                        values=[
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='np', ctx=Load()),
+                                        attr='random',
+                                        ctx=Load()),
+                                    attr='normal',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=0),
+                                    Constant(value=1),
+                                    Name(id='n_rows', ctx=Load())]),
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='np', ctx=Load()),
+                                        attr='random',
+                                        ctx=Load()),
+                                    attr='gamma',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=2),
+                                    Constant(value=2),
+                                    Name(id='n_rows', ctx=Load())]),
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='np', ctx=Load()),
+                                        attr='random',
+                                        ctx=Load()),
+                                    attr='exponential',
+                                    ctx=Load()),
+                                args=[
+                                    Constant(value=2),
+                                    Name(id='n_rows', ctx=Load())]),
+                            Call(
+                                func=Attribute(
+                                    value=Attribute(
+                                        value=Name(id='np', ctx=Load()),
+                                        attr='random',
+                                        ctx=Load()),
+                                    attr='choice',
+                                    ctx=Load()),
+                                args=[
+                                    List(
+                                        elts=[
+                                            Constant(value='A'),
+                                            Constant(value='B'),
+                                            Constant(value='C')],
+                                        ctx=Load()),
+                                    Name(id='n_rows', ctx=Load())])])])),
+        Assign(
+            targets=[
+                Name(id='transformed_df', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='df', ctx=Load()),
+                    attr='copy',
+                    ctx=Load()))),
+        For(
+            target=Name(id='col', ctx=Store()),
+            iter=List(
+                elts=[
+                    Constant(value='gamma'),
+                    Constant(value='exp')],
+                ctx=Load()),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='col', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='gamma')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='transformed_df', ctx=Load()),
+                                    slice=JoinedStr(
+                                        values=[
+                                            FormattedValue(
+                                                value=Name(id='col', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value='_norm')]),
+                                    ctx=Store())],
+                            value=Subscript(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Name(id='stats', ctx=Load()),
+                                        attr='boxcox',
+                                        ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='df', ctx=Load()),
+                                            slice=Name(id='col', ctx=Load()),
+                                            ctx=Load())]),
+                                slice=Constant(value=0),
+                                ctx=Load()))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='transformed_df', ctx=Load()),
+                                    slice=JoinedStr(
+                                        values=[
+                                            FormattedValue(
+                                                value=Name(id='col', ctx=Load()),
+                                                conversion=-1),
+                                            Constant(value='_norm')]),
+                                    ctx=Store())],
+                            value=Subscript(
+                                value=Name(id='df', ctx=Load()),
+                                slice=Name(id='col', ctx=Load()),
+                                ctx=Load()))])]),
+        For(
+            target=Name(id='group', ctx=Store()),
+            iter=Call(
+                func=Attribute(
+                    value=Subscript(
+                        value=Name(id='df', ctx=Load()),
+                        slice=Constant(value='group'),
+                        ctx=Load()),
+                    attr='unique',
+                    ctx=Load())),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='group_data', ctx=Store())],
+                    value=Subscript(
+                        value=Name(id='transformed_df', ctx=Load()),
+                        slice=Compare(
+                            left=Subscript(
+                                value=Name(id='transformed_df', ctx=Load()),
+                                slice=Constant(value='group'),
+                                ctx=Load()),
+                            ops=[
+                                Eq()],
+                            comparators=[
+                                Name(id='group', ctx=Load())]),
+                        ctx=Load())),
+                If(
+                    test=Compare(
+                        left=Call(
+                            func=Name(id='len', ctx=Load()),
+                            args=[
+                                Name(id='group_data', ctx=Load())]),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Constant(value=1)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result1', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='ttest_1samp',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='group_data', ctx=Load()),
+                                        slice=Constant(value='gamma'),
+                                        ctx=Load()),
+                                    Constant(value=0)]))]),
+                If(
+                    test=Compare(
+                        left=Name(id='group', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='A')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result2', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='pearsonr',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='group_data', ctx=Load()),
+                                        slice=Constant(value='gamma'),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='group_data', ctx=Load()),
+                                        slice=Constant(value='exp'),
+                                        ctx=Load())]))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='group', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='B')]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Tuple(
+                                            elts=[
+                                                Name(id='_', ctx=Store()),
+                                                Name(id='p', ctx=Store())],
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='shapiro',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='group_data', ctx=Load()),
+                                                slice=Constant(value='gamma_norm'),
+                                                ctx=Load())])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='p', ctx=Load()),
+                                        ops=[
+                                            Gt()],
+                                        comparators=[
+                                            Name(id='alpha', ctx=Load())]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Name(id='result2', ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='stats', ctx=Load()),
+                                                    attr='ttest_ind',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Subscript(
+                                                        value=Name(id='group_data', ctx=Load()),
+                                                        slice=Constant(value='gamma_norm'),
+                                                        ctx=Load()),
+                                                    Subscript(
+                                                        value=Name(id='group_data', ctx=Load()),
+                                                        slice=Constant(value='exp'),
+                                                        ctx=Load())]))])],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='result2', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='f_oneway',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='group_data', ctx=Load()),
+                                                slice=Constant(value='gamma_norm'),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='group_data', ctx=Load()),
+                                                slice=Constant(value='exp'),
+                                                ctx=Load())]))])])])])

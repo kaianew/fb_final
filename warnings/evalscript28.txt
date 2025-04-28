@@ -1,0 +1,16 @@
+Found 4 potential normality-related bug(s) in < 1 seconds.
+The table below shows statistical tests which require normally-distributed data that 
+may be called in your script without checking the data for normality. 
+Consider checking the data for normality using a test like scipy.stats.shapiro before 
+the line number given.
++--------------------+--------+-------------------------------+
+| Statistical Test   |   Line | Potentially Non-Normal Data   |
++====================+========+===============================+
+| ttest_ind          |     17 | data2                         |
++--------------------+--------+-------------------------------+
+| pearsonr           |     23 | data1                         |
++--------------------+--------+-------------------------------+
+| ttest_rel          |     28 | data2                         |
++--------------------+--------+-------------------------------+
+| ttest_rel          |     28 | data1                         |
++--------------------+--------+-------------------------------+

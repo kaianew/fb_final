@@ -1,0 +1,131 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=71)])),
+        Assign(
+            targets=[
+                Name(id='p_threshold', ctx=Store())],
+            value=Call(
+                func=Name(id='float', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter p-value threshold: ')])])),
+        Assign(
+            targets=[
+                Name(id='data1', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=50)])),
+        Assign(
+            targets=[
+                Name(id='data2', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='binomial',
+                    ctx=Load()),
+                args=[
+                    Constant(value=100),
+                    Constant(value=0.3),
+                    Constant(value=50)])),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='_', ctx=Store()),
+                        Name(id='p1', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='normaltest',
+                    ctx=Load()),
+                args=[
+                    Name(id='data1', ctx=Load())])),
+        If(
+            test=Compare(
+                left=Name(id='p1', ctx=Load()),
+                ops=[
+                    Gt()],
+                comparators=[
+                    Name(id='p_threshold', ctx=Load())]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='result1', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='ttest_ind',
+                            ctx=Load()),
+                        args=[
+                            Name(id='data1', ctx=Load()),
+                            Name(id='data2', ctx=Load())])),
+                Assign(
+                    targets=[
+                        Name(id='result2', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='pearsonr',
+                            ctx=Load()),
+                        args=[
+                            Name(id='data1', ctx=Load()),
+                            Name(id='data2', ctx=Load())]))],
+            orelse=[
+                Assign(
+                    targets=[
+                        Name(id='norm_data', ctx=Store())],
+                    value=Subscript(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='stats', ctx=Load()),
+                                attr='boxcox',
+                                ctx=Load()),
+                            args=[
+                                Name(id='data2', ctx=Load())]),
+                        slice=Constant(value=0),
+                        ctx=Load())),
+                Assign(
+                    targets=[
+                        Name(id='result1', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='ttest_rel',
+                            ctx=Load()),
+                        args=[
+                            Name(id='data1', ctx=Load()),
+                            Name(id='data2', ctx=Load())]))])])

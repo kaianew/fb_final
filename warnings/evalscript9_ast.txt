@@ -1,0 +1,272 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=47)])),
+        Assign(
+            targets=[
+                Name(id='transform_type', ctx=Store())],
+            value=Call(
+                func=Name(id='input', ctx=Load()),
+                args=[
+                    Constant(value='Enter transform type (box/yeo): ')])),
+        Assign(
+            targets=[
+                Name(id='test_type', ctx=Store())],
+            value=Call(
+                func=Name(id='input', ctx=Load()),
+                args=[
+                    Constant(value='Enter test type (t/f/p): ')])),
+        Assign(
+            targets=[
+                Name(id='data_dict', ctx=Store())],
+            value=Dict(
+                keys=[
+                    Constant(value='normal'),
+                    Constant(value='gamma'),
+                    Constant(value='exp'),
+                    Constant(value='chi')],
+                values=[
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='normal',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=1),
+                            Constant(value=70)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='gamma',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=2),
+                            Constant(value=70)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='exponential',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=70)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='chisquare',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=3),
+                            Constant(value=70)])])),
+        Assign(
+            targets=[
+                Name(id='transformed', ctx=Store())],
+            value=Dict()),
+        If(
+            test=Compare(
+                left=Name(id='transform_type', ctx=Load()),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value='box')]),
+            body=[
+                Assign(
+                    targets=[
+                        Subscript(
+                            value=Name(id='transformed', ctx=Load()),
+                            slice=Constant(value='gamma'),
+                            ctx=Store())],
+                    value=Subscript(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='stats', ctx=Load()),
+                                attr='boxcox',
+                                ctx=Load()),
+                            args=[
+                                Subscript(
+                                    value=Name(id='data_dict', ctx=Load()),
+                                    slice=Constant(value='gamma'),
+                                    ctx=Load())]),
+                        slice=Constant(value=0),
+                        ctx=Load()))],
+            orelse=[
+                If(
+                    test=Compare(
+                        left=Name(id='transform_type', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='yeo')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Subscript(
+                                    value=Name(id='transformed', ctx=Load()),
+                                    slice=Constant(value='exp'),
+                                    ctx=Store())],
+                            value=Subscript(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Name(id='stats', ctx=Load()),
+                                        attr='yeojohnson',
+                                        ctx=Load()),
+                                    args=[
+                                        Subscript(
+                                            value=Name(id='data_dict', ctx=Load()),
+                                            slice=Constant(value='exp'),
+                                            ctx=Load())]),
+                                slice=Constant(value=0),
+                                ctx=Load()))])]),
+        If(
+            test=Compare(
+                left=Name(id='test_type', ctx=Load()),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value='t')]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Constant(value='gamma'),
+                        ops=[
+                            In()],
+                        comparators=[
+                            Name(id='transformed', ctx=Load())]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='ttest_ind',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='transformed', ctx=Load()),
+                                        slice=Constant(value='gamma'),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='data_dict', ctx=Load()),
+                                        slice=Constant(value='exp'),
+                                        ctx=Load())]))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='ttest_ind',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data_dict', ctx=Load()),
+                                        slice=Constant(value='gamma'),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='transformed', ctx=Load()),
+                                        slice=Constant(value='exp'),
+                                        ctx=Load())]))])],
+            orelse=[
+                If(
+                    test=Compare(
+                        left=Name(id='test_type', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='f')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='f_oneway',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='data_dict', ctx=Load()),
+                                        slice=Constant(value='normal'),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='data_dict', ctx=Load()),
+                                        slice=Constant(value='chi'),
+                                        ctx=Load())]))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Constant(value='gamma'),
+                                ops=[
+                                    In()],
+                                comparators=[
+                                    Name(id='transformed', ctx=Load())]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Name(id='result', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='pearsonr',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='transformed', ctx=Load()),
+                                                slice=Constant(value='gamma'),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='data_dict', ctx=Load()),
+                                                slice=Constant(value='chi'),
+                                                ctx=Load())]))],
+                            orelse=[
+                                Assign(
+                                    targets=[
+                                        Name(id='result', ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='pearsonr',
+                                            ctx=Load()),
+                                        args=[
+                                            Subscript(
+                                                value=Name(id='data_dict', ctx=Load()),
+                                                slice=Constant(value='gamma'),
+                                                ctx=Load()),
+                                            Subscript(
+                                                value=Name(id='data_dict', ctx=Load()),
+                                                slice=Constant(value='chi'),
+                                                ctx=Load())]))])])])])

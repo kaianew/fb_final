@@ -1,0 +1,140 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=68)])),
+        Assign(
+            targets=[
+                Name(id='transform', ctx=Store())],
+            value=Call(
+                func=Name(id='input', ctx=Load()),
+                args=[
+                    Constant(value='Enter transform (none/box/yeo): ')])),
+        Assign(
+            targets=[
+                Name(id='data1', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=40)])),
+        Assign(
+            targets=[
+                Name(id='data2', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='vonmises',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=40)])),
+        If(
+            test=Compare(
+                left=Name(id='transform', ctx=Load()),
+                ops=[
+                    Eq()],
+                comparators=[
+                    Constant(value='box')]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='transformed', ctx=Store())],
+                    value=Subscript(
+                        value=Call(
+                            func=Attribute(
+                                value=Name(id='stats', ctx=Load()),
+                                attr='boxcox',
+                                ctx=Load()),
+                            args=[
+                                Name(id='data2', ctx=Load())]),
+                        slice=Constant(value=0),
+                        ctx=Load()))],
+            orelse=[
+                If(
+                    test=Compare(
+                        left=Name(id='transform', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='yeo')]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='transformed', ctx=Store())],
+                            value=Subscript(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Name(id='stats', ctx=Load()),
+                                        attr='yeojohnson',
+                                        ctx=Load()),
+                                    args=[
+                                        Name(id='data2', ctx=Load())]),
+                                slice=Constant(value=0),
+                                ctx=Load()))],
+                    orelse=[
+                        Assign(
+                            targets=[
+                                Name(id='transformed', ctx=Store())],
+                            value=Name(id='data2', ctx=Load()))])]),
+        Assign(
+            targets=[
+                Name(id='result1', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='ttest_1samp',
+                    ctx=Load()),
+                args=[
+                    Name(id='transformed', ctx=Load()),
+                    Constant(value=0)])),
+        Assign(
+            targets=[
+                Name(id='result2', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='pearsonr',
+                    ctx=Load()),
+                args=[
+                    Name(id='data1', ctx=Load()),
+                    Name(id='data2', ctx=Load())])),
+        Assign(
+            targets=[
+                Name(id='result3', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='ttest_rel',
+                    ctx=Load()),
+                args=[
+                    Name(id='transformed', ctx=Load()),
+                    Name(id='data2', ctx=Load())]))])

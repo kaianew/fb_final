@@ -1,0 +1,252 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=42)])),
+        Assign(
+            targets=[
+                Name(id='datasets', ctx=Store())],
+            value=List(
+                elts=[
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='lognormal',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=1),
+                            Constant(value=50)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='normal',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=1),
+                            Constant(value=50)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='exponential',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=1.5),
+                            Constant(value=50)]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='normal',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=5),
+                            Constant(value=2),
+                            Constant(value=50)])],
+                ctx=Load())),
+        Assign(
+            targets=[
+                Name(id='results', ctx=Store())],
+            value=List(ctx=Load())),
+        For(
+            target=Name(id='i', ctx=Store()),
+            iter=Call(
+                func=Name(id='range', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='len', ctx=Load()),
+                        args=[
+                            Name(id='datasets', ctx=Load())])]),
+            body=[
+                For(
+                    target=Name(id='j', ctx=Store()),
+                    iter=Call(
+                        func=Name(id='range', ctx=Load()),
+                        args=[
+                            BinOp(
+                                left=Name(id='i', ctx=Load()),
+                                op=Add(),
+                                right=Constant(value=1)),
+                            Call(
+                                func=Name(id='len', ctx=Load()),
+                                args=[
+                                    Name(id='datasets', ctx=Load())])]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Tuple(
+                                    elts=[
+                                        Name(id='data1', ctx=Store()),
+                                        Name(id='data2', ctx=Store())],
+                                    ctx=Store())],
+                            value=Tuple(
+                                elts=[
+                                    Subscript(
+                                        value=Name(id='datasets', ctx=Load()),
+                                        slice=Name(id='i', ctx=Load()),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='datasets', ctx=Load()),
+                                        slice=Name(id='j', ctx=Load()),
+                                        ctx=Load())],
+                                ctx=Load())),
+                        If(
+                            test=Compare(
+                                left=BinOp(
+                                    left=Name(id='i', ctx=Load()),
+                                    op=Mod(),
+                                    right=Constant(value=2)),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value=0)]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Tuple(
+                                            elts=[
+                                                Name(id='_', ctx=Store()),
+                                                Name(id='p', ctx=Store())],
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='shapiro',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='data1', ctx=Load())])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='p', ctx=Load()),
+                                        ops=[
+                                            Lt()],
+                                        comparators=[
+                                            Constant(value=0.05)]),
+                                    body=[
+                                        Assign(
+                                            targets=[
+                                                Tuple(
+                                                    elts=[
+                                                        Name(id='data1', ctx=Store()),
+                                                        Name(id='_', ctx=Store())],
+                                                    ctx=Store())],
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='stats', ctx=Load()),
+                                                    attr='yeojohnson',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='data1', ctx=Load())]))])]),
+                        If(
+                            test=Compare(
+                                left=Name(id='j', ctx=Load()),
+                                ops=[
+                                    Lt()],
+                                comparators=[
+                                    Constant(value=2)]),
+                            body=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='results', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='stats', ctx=Load()),
+                                                    attr='ttest_ind',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='data1', ctx=Load()),
+                                                    Name(id='data2', ctx=Load())])]))],
+                            orelse=[
+                                Expr(
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='results', ctx=Load()),
+                                            attr='append',
+                                            ctx=Load()),
+                                        args=[
+                                            Call(
+                                                func=Attribute(
+                                                    value=Name(id='stats', ctx=Load()),
+                                                    attr='pearsonr',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='data1', ctx=Load()),
+                                                    Name(id='data2', ctx=Load())])]))])])]),
+        Assign(
+            targets=[
+                Name(id='combined_data', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='np', ctx=Load()),
+                    attr='concatenate',
+                    ctx=Load()),
+                args=[
+                    ListComp(
+                        elt=Name(id='d', ctx=Load()),
+                        generators=[
+                            comprehension(
+                                target=Name(id='d', ctx=Store()),
+                                iter=Name(id='datasets', ctx=Load()),
+                                is_async=0)])])),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='transformed', ctx=Store()),
+                        Name(id='_', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='boxcox',
+                    ctx=Load()),
+                args=[
+                    Name(id='combined_data', ctx=Load())])),
+        Assign(
+            targets=[
+                Name(id='final_result', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='f_oneway',
+                    ctx=Load()),
+                args=[
+                    Name(id='transformed', ctx=Load()),
+                    Subscript(
+                        value=Name(id='datasets', ctx=Load()),
+                        slice=Constant(value=0),
+                        ctx=Load()),
+                    Subscript(
+                        value=Name(id='datasets', ctx=Load()),
+                        slice=Constant(value=1),
+                        ctx=Load())]))])

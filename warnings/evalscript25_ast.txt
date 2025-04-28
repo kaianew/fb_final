@@ -1,0 +1,158 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=63)])),
+        Assign(
+            targets=[
+                Name(id='size', ctx=Store())],
+            value=Call(
+                func=Name(id='int', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter sample size: ')])])),
+        Assign(
+            targets=[
+                Name(id='datasets', ctx=Store())],
+            value=List(
+                elts=[
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='normal',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=0),
+                            Constant(value=1),
+                            Name(id='size', ctx=Load())]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='exponential',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Name(id='size', ctx=Load())]),
+                    Call(
+                        func=Attribute(
+                            value=Attribute(
+                                value=Name(id='np', ctx=Load()),
+                                attr='random',
+                                ctx=Load()),
+                            attr='gamma',
+                            ctx=Load()),
+                        args=[
+                            Constant(value=2),
+                            Constant(value=2),
+                            Name(id='size', ctx=Load())])],
+                ctx=Load())),
+        If(
+            test=Compare(
+                left=Name(id='size', ctx=Load()),
+                ops=[
+                    Lt()],
+                comparators=[
+                    Constant(value=50)]),
+            body=[
+                Assign(
+                    targets=[
+                        Name(id='result', ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='ttest_ind',
+                            ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='datasets', ctx=Load()),
+                                slice=Constant(value=0),
+                                ctx=Load()),
+                            Subscript(
+                                value=Name(id='datasets', ctx=Load()),
+                                slice=Constant(value=1),
+                                ctx=Load())]))],
+            orelse=[
+                Assign(
+                    targets=[
+                        Tuple(
+                            elts=[
+                                Name(id='_', ctx=Store()),
+                                Name(id='p', ctx=Store())],
+                            ctx=Store())],
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='stats', ctx=Load()),
+                            attr='normaltest',
+                            ctx=Load()),
+                        args=[
+                            Subscript(
+                                value=Name(id='datasets', ctx=Load()),
+                                slice=Constant(value=0),
+                                ctx=Load())])),
+                If(
+                    test=Compare(
+                        left=Name(id='p', ctx=Load()),
+                        ops=[
+                            Gt()],
+                        comparators=[
+                            Constant(value=0.05)]),
+                    body=[
+                        Assign(
+                            targets=[
+                                Name(id='result', ctx=Store())],
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='pearsonr',
+                                    ctx=Load()),
+                                args=[
+                                    Subscript(
+                                        value=Name(id='datasets', ctx=Load()),
+                                        slice=Constant(value=0),
+                                        ctx=Load()),
+                                    Subscript(
+                                        value=Name(id='datasets', ctx=Load()),
+                                        slice=Constant(value=2),
+                                        ctx=Load())]))])]),
+        Assign(
+            targets=[
+                Name(id='result2', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='ttest_rel',
+                    ctx=Load()),
+                args=[
+                    Subscript(
+                        value=Name(id='datasets', ctx=Load()),
+                        slice=Constant(value=1),
+                        ctx=Load()),
+                    Subscript(
+                        value=Name(id='datasets', ctx=Load()),
+                        slice=Constant(value=2),
+                        ctx=Load())]))])

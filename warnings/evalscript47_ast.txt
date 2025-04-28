@@ -1,0 +1,112 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='plot_data')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=47)])),
+        Assign(
+            targets=[
+                Name(id='size', ctx=Store())],
+            value=Call(
+                func=Name(id='int', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter data size: ')])])),
+        Assign(
+            targets=[
+                Name(id='skewed_data', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='lognormal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Name(id='size', ctx=Load())])),
+        Assign(
+            targets=[
+                Name(id='normal_data', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=10),
+                    Constant(value=2),
+                    Name(id='size', ctx=Load())])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plot_data', ctx=Load()),
+                    attr='plot',
+                    ctx=Load()),
+                args=[
+                    Name(id='normal_data', ctx=Load()),
+                    Name(id='skewed_data', ctx=Load()),
+                    Constant(value='before_transform.pdf')])),
+        Assign(
+            targets=[
+                Name(id='skewed_data_positive', ctx=Store())],
+            value=BinOp(
+                left=BinOp(
+                    left=Name(id='skewed_data', ctx=Load()),
+                    op=Sub(),
+                    right=Call(
+                        func=Attribute(
+                            value=Name(id='np', ctx=Load()),
+                            attr='min',
+                            ctx=Load()),
+                        args=[
+                            Name(id='skewed_data', ctx=Load())])),
+                op=Add(),
+                right=Constant(value=1))),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='transformed_data', ctx=Store()),
+                        Name(id='_', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='boxcox',
+                    ctx=Load()),
+                args=[
+                    Name(id='skewed_data_positive', ctx=Load())])),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Name(id='plot_data', ctx=Load()),
+                    attr='plot',
+                    ctx=Load()),
+                args=[
+                    Name(id='normal_data', ctx=Load()),
+                    Name(id='transformed_data', ctx=Load()),
+                    Constant(value='after_transform.pdf')]))])

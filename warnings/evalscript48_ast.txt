@@ -1,0 +1,153 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=48)])),
+        Assign(
+            targets=[
+                Name(id='threshold', ctx=Store())],
+            value=Call(
+                func=Name(id='float', ctx=Load()),
+                args=[
+                    Call(
+                        func=Name(id='input', ctx=Load()),
+                        args=[
+                            Constant(value='Enter significance threshold: ')])])),
+        Assign(
+            targets=[
+                Name(id='group1', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=50)])),
+        Assign(
+            targets=[
+                Name(id='group2', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0.5),
+                    Constant(value=1),
+                    Constant(value=50)])),
+        Assign(
+            targets=[
+                Tuple(
+                    elts=[
+                        Name(id='t_stat', ctx=Store()),
+                        Name(id='p_value', ctx=Store())],
+                    ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='ttest_ind',
+                    ctx=Load()),
+                args=[
+                    Name(id='group1', ctx=Load()),
+                    Name(id='group2', ctx=Load())])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    JoinedStr(
+                        values=[
+                            Constant(value='t-statistic: '),
+                            FormattedValue(
+                                value=Name(id='t_stat', ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')]))])])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    JoinedStr(
+                        values=[
+                            Constant(value='p-value: '),
+                            FormattedValue(
+                                value=Name(id='p_value', ctx=Load()),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')]))])])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    JoinedStr(
+                        values=[
+                            Constant(value='Significant difference: '),
+                            FormattedValue(
+                                value=Compare(
+                                    left=Name(id='p_value', ctx=Load()),
+                                    ops=[
+                                        Lt()],
+                                    comparators=[
+                                        Name(id='threshold', ctx=Load())]),
+                                conversion=-1)])])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    JoinedStr(
+                        values=[
+                            Constant(value='\nGroup 1 mean: '),
+                            FormattedValue(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Name(id='np', ctx=Load()),
+                                        attr='mean',
+                                        ctx=Load()),
+                                    args=[
+                                        Name(id='group1', ctx=Load())]),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')]))])])),
+        Expr(
+            value=Call(
+                func=Name(id='print', ctx=Load()),
+                args=[
+                    JoinedStr(
+                        values=[
+                            Constant(value='Group 2 mean: '),
+                            FormattedValue(
+                                value=Call(
+                                    func=Attribute(
+                                        value=Name(id='np', ctx=Load()),
+                                        attr='mean',
+                                        ctx=Load()),
+                                    args=[
+                                        Name(id='group2', ctx=Load())]),
+                                conversion=-1,
+                                format_spec=JoinedStr(
+                                    values=[
+                                        Constant(value='.4f')]))])]))])

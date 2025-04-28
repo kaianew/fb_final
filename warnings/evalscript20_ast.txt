@@ -1,0 +1,145 @@
+Module(
+    body=[
+        Import(
+            names=[
+                alias(name='scipy.stats', asname='stats')]),
+        Import(
+            names=[
+                alias(name='numpy', asname='np')]),
+        Import(
+            names=[
+                alias(name='pandas', asname='pd')]),
+        FunctionDef(
+            name='run_test',
+            args=arguments(
+                args=[
+                    arg(arg='data1'),
+                    arg(arg='data2'),
+                    arg(arg='test_type')]),
+            body=[
+                If(
+                    test=Compare(
+                        left=Name(id='test_type', ctx=Load()),
+                        ops=[
+                            Eq()],
+                        comparators=[
+                            Constant(value='t')]),
+                    body=[
+                        Return(
+                            value=Call(
+                                func=Attribute(
+                                    value=Name(id='stats', ctx=Load()),
+                                    attr='ttest_ind',
+                                    ctx=Load()),
+                                args=[
+                                    Name(id='data1', ctx=Load()),
+                                    Name(id='data2', ctx=Load())]))],
+                    orelse=[
+                        If(
+                            test=Compare(
+                                left=Name(id='test_type', ctx=Load()),
+                                ops=[
+                                    Eq()],
+                                comparators=[
+                                    Constant(value='p')]),
+                            body=[
+                                Assign(
+                                    targets=[
+                                        Tuple(
+                                            elts=[
+                                                Name(id='_', ctx=Store()),
+                                                Name(id='p', ctx=Store())],
+                                            ctx=Store())],
+                                    value=Call(
+                                        func=Attribute(
+                                            value=Name(id='stats', ctx=Load()),
+                                            attr='normaltest',
+                                            ctx=Load()),
+                                        args=[
+                                            Name(id='data1', ctx=Load())])),
+                                If(
+                                    test=Compare(
+                                        left=Name(id='p', ctx=Load()),
+                                        ops=[
+                                            Gt()],
+                                        comparators=[
+                                            Constant(value=0.05)]),
+                                    body=[
+                                        Return(
+                                            value=Call(
+                                                func=Attribute(
+                                                    value=Name(id='stats', ctx=Load()),
+                                                    attr='pearsonr',
+                                                    ctx=Load()),
+                                                args=[
+                                                    Name(id='data1', ctx=Load()),
+                                                    Name(id='data2', ctx=Load())]))])])]),
+                Return(
+                    value=Constant(value=None))]),
+        Expr(
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='seed',
+                    ctx=Load()),
+                args=[
+                    Constant(value=58)])),
+        Assign(
+            targets=[
+                Name(id='test', ctx=Store())],
+            value=Call(
+                func=Name(id='input', ctx=Load()),
+                args=[
+                    Constant(value='Enter test type (t/p): ')])),
+        Assign(
+            targets=[
+                Name(id='data1', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='normal',
+                    ctx=Load()),
+                args=[
+                    Constant(value=0),
+                    Constant(value=1),
+                    Constant(value=35)])),
+        Assign(
+            targets=[
+                Name(id='data2', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Attribute(
+                        value=Name(id='np', ctx=Load()),
+                        attr='random',
+                        ctx=Load()),
+                    attr='weibull',
+                    ctx=Load()),
+                args=[
+                    Constant(value=1.5),
+                    Constant(value=35)])),
+        Assign(
+            targets=[
+                Name(id='result', ctx=Store())],
+            value=Call(
+                func=Name(id='run_test', ctx=Load()),
+                args=[
+                    Name(id='data1', ctx=Load()),
+                    Name(id='data2', ctx=Load()),
+                    Name(id='test', ctx=Load())])),
+        Assign(
+            targets=[
+                Name(id='extra_result', ctx=Store())],
+            value=Call(
+                func=Attribute(
+                    value=Name(id='stats', ctx=Load()),
+                    attr='ttest_1samp',
+                    ctx=Load()),
+                args=[
+                    Name(id='data2', ctx=Load()),
+                    Constant(value=0)]))])
